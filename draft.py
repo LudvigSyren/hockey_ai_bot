@@ -12,6 +12,15 @@ player_data = pd.read_csv("fixed_data_2018.csv")
 next_year = pd.read_csv("fixed_data_2018.csv")
 # aggregate all scores into an array for each player
 scores = player_data[['player_id', 'points',]].groupby('player_id').agg(lambda x: list(x)).reset_index()
+player_pos = player_data[['player_id', 'primaryPosition']]
+unique_pos = []
+#count of each player at resp pos.
+for id in player_pos.player_id.unique():
+    temp_pos = player_pos.loc[player_pos['player_id'] == id]['primaryPosition'].reset_index(drop=True)
+    unique_pos.append(temp_pos[0])
+#player_pos = player_pos.loc[player_pos['player_id'] == player_pos.player_id.unique()]
+df_unique_pos = pd.DataFrame(unique_pos, columns=['pos'])
+print(df_unique_pos['pos'].value_counts())
 scores_next = next_year[['player_id', 'points',]].groupby('player_id').agg(lambda x: list(x)).reset_index()
 
 #This is not clear to me
@@ -30,13 +39,13 @@ all_points = (all_points - all_points.min().max())/(all_points.max().max() - all
 # Finding index in an aggregate score for each position
 pointies = list(all_points.mean().index)
 
+#Pick out players in resp position
 defence = hockey.position_indexes(pointies,all_points,player_data,idx, "D")
-enter = hockey.position_indexes(pointies,all_points,player_data,idx, "C")
-goalie = hockey.position_indexes(pointies,all_points, player_data,idx,"G")
+center = hockey.position_indexes(pointies,all_points,player_data,idx, "C")
+#goalie = hockey.position_indexes(pointies,all_points, player_data,idx,"G")
 right_wingers = hockey.position_indexes(pointies, all_points,player_data,idx,"RW")
 left_wingers = hockey.position_indexes(pointies, all_points,player_data,idx,"LW")
-
-#Retired players for the upcoming season
+#Looks like some players are missing after this operation
 
 #Exclude player that has retired for the upconing season
 def exclude_retired(players, names):

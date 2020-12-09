@@ -9,7 +9,8 @@ def position_indexes(all_pos, all_points, df, idx, position):
     in a particular position
     '''
     homes = []
-    for idx_ in all_points[player_constraint(position, df, idx)]:
+    players = all_points[player_constraint(position, df, idx)]
+    for idx_ in players:
         homes.append(all_pos.index(idx_))
     return homes
 

@@ -71,3 +71,47 @@ ret_names = ['Brooks Orpik', 'Matt Hendricks', "Roberto Luongo", 'Chrus Butler',
              'Ben Lovejoy', 'Niklas Kronwall', 'Dan Giardi', 'Eric Gryba', 'Lee Stempniak',
              'Scott Eansor', 'Michael Leighton', 'Chris Thorburn', 'Dennis Seidenberg']
 
+##Run draft
+functions = [hockey.optim_player,
+             hockey.optim_player,
+             hockey.optim_player,
+             hockey.optim_player,
+            hockey.optim_player,
+            hockey.optim_player,
+            hockey.optim_player,
+            hockey.optim_player]
+
+greedy_selections = {}
+greedy_selections['defence'] = []
+greedy_selections['center'] = []
+greedy_selections['right_winger'] = []
+greedy_selections['left_winger'] = []
+
+
+order = [3,0,6,7,2,4,5,1]
+
+print(len(order), len(functions))
+team_names =["Fighting Squirrels", "Snorky Speak Man", "Sad Skaters",
+            "Burning Ice", "destructus", "frozen hope",
+            "Byron", "Big G"]
+
+team_names = [x.upper() for x in team_names]
+print(team_names)
+args = dict(scores = all_points,
+            gammaa = [0.01, 0.01, 0.03, 0.8, 0, 0.89, None, None],
+            greedy_selections = greedy_selections,
+            df = player_data,
+            defence = defence,
+            center = center,
+            left_wingers = left_wingers,
+            right_wingers = right_wingers,
+            selection = ['max', 'optim', 'optim', 'max', 'max', 'optim', None, None],
+            sub_gamma = [None, 0.3, 0.8, None, None, .02, None, None])
+
+taken = exclude_retired(player_data, ret_names)
+print(taken)
+all_players, teams = hockey.draft(functions, order, pause= False, team_names = team_names, team_size=16, **args)
+
+
+
+

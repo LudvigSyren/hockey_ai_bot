@@ -11,6 +11,7 @@ def position_indexes(all_pos, all_points, df, idx, position):
     homes = []
     players = all_points[player_constraint(position, df, idx)]
     for idx_ in players:
+        #retrun index of the player in all_pos
         homes.append(all_pos.index(idx_))
     return homes
 
@@ -144,15 +145,13 @@ def optim_player(scores,
                       df,
                       defence,
                       center,
-                      goalie,
                       right_wingers,
                       left_wingers,
                       sub_gamma = .5, 
                       selection = "max",
                       max_salary = False,
-                      team_size = 17,
+                      team_size = 14,
                       min_d = 4,
-                      min_g = 2,
                       min_c = 2,
                       min_rw = 2,
                       min_lw =2,
@@ -183,25 +182,23 @@ def optim_player(scores,
     # Must pick players we already have chosen 
     for i in range(len(mine)):
         constraints.append(x[mine[i]] == 1)
-    # Add the salary constraint if we need to 
-    if max_salary:
-        S = np.diag(df.groupby('player_id').max().Salary.tolist())/10000000
-         # L1 norm here, absolute value is fine as no salaries should be negative.
-        constraints.append(cp.norm(S @ x, p=1) <= max_salary)
+    # Add the salary constraint if we need to
+    #
+    #if max_salary:
+    #    S = np.diag(df.groupby('player_id').max().Salary.tolist())/10000000
+    #     # L1 norm here, absolute value is fine as no salaries should be negative.
+    #    constraints.append(cp.norm(S @ x, p=1) <= max_salary)
     
     
     if sportnet: 
         forwards = center + right_wingers + left_wingers
         constraints = constraints + [cp.sum(x) == team_size,
                    cp.sum(x[defence]) == min_d,
-                   cp.sum(x[goalie]) == min_g,
                    cp.sum(x[forwards]) >= min_c + min_rw + min_lw
                    ] 
     else:
         constraints = constraints + [cp.sum(x) == team_size,
                        cp.sum(x[defence]) >=min_d,
-                       cp.sum(x[goalie]) >= min_g,
-                       cp.sum(x[goalie]) <= min_g + 1,
                        cp.sum(x[center]) >= min_c,
                        cp.sum(x[right_wingers]) >= min_rw,
                        cp.sum(x[left_wingers]) >= min_lw] 
@@ -212,18 +209,20 @@ def optim_player(scores,
    
     gamma.value = gammaa
     # TODO: we can probably tighten some of these up 
-    # Note: after this x is defined as our players, 
-    prob.solve(parallel=True,   
-               mi_max_iters=500,
-               mi_abs_eps = 1e-4,
-               mi_rel_eps = 1e-1,
-               max_iters=200,
-               abstol = 1e-5,
-               reltol = 1e-4,
-               feastol = 1e-5,
-               abstol_inacc = 5e-3,
-               reltol_inacc = 5e-3,
-               feastol_inacc = 1e-2)
+    # Note: after this x is defined as our players,
+    prob.solve(solver = 'ECOS_BB')
+    #prob.solve(solver='ECOS_BB',
+    #           parallel=True,
+    #           mi_max_iters=500,
+    #           mi_abs_eps = 1e-4,
+    #           mi_rel_eps = 1e-1,
+    #           max_iters=200,
+    #           abstol = 1e-5,
+    #           reltol = 1e-4,
+    #           feastol = 1e-5,
+    #           abstol_inacc = 5e-3,
+    #           reltol_inacc = 5e-3,
+    #           feastol_inacc = 1e-2)
     
     # Pick highest score player
     # TODO: Update picking stradegy to also include as option sqrt(scores.mean**2 + scores.std**2)
@@ -239,8 +238,9 @@ def optim_player(scores,
         return players, risk_data, return_data
 
     if selection == 'max':
-       
+       #pick new players scores.mean()
         possible = np.take(np.array(scores.mean()), new_players)
+       #Pick player with highest scores.mean()
         to_take = list(scores.mean()).index(max(possible))
 
         mine.append(to_take)
@@ -355,7 +355,6 @@ def draft(functions, order, team_size=17, pause = False, team_names = None,  **k
                                                        gammaa=kwargs['gammaa'][j],
                                                        defence=kwargs['defence'],
                                                        center=kwargs['center'],
-                                                       goalie=kwargs['goalie'],
                                                        selection=kwargs['selection'][j],
                                                        right_wingers=kwargs['right_wingers'],
                                                        left_wingers=kwargs['left_wingers'],

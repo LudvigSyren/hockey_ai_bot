@@ -327,7 +327,7 @@ def human(df_, all_points, name, taken, mine):
     # print(mine, taken)
     return mine, taken
 
-def draft(functions, order, team_size=17, pause = False, team_names = None,  **kwargs):
+def draft(functions, order, team_size=14, pause = False, team_names = None, fantasy_teams=[],  **kwargs):
     '''  
     This function is to run a draft which decides on a team. The 'functions' argument
     is a list of functions (defined above) which can be used to simulate players, and 
@@ -368,6 +368,8 @@ def draft(functions, order, team_size=17, pause = False, team_names = None,  **k
                 n = df[df.player_id.isin(playerids)][['firstName', 'lastName', 'primaryPosition']].drop_duplicates().values
                 print("Chose player: ", n[0][0], n[0][1], n[0][2])
                 print()
+                player = n[0][0] + " " + n[0][1] + ", " + n[0][2]
+                fantasy_teams[team_names[j]].append(player)
                 if pause:
                     input("Press enter to continue")
 
@@ -407,4 +409,4 @@ def draft(functions, order, team_size=17, pause = False, team_names = None,  **k
     # for key in greedy_selections:
     #     mine[index_of_greed] += greedy_selections[key]
     
-    return taken, mine
+    return taken, mine, fantasy_teams

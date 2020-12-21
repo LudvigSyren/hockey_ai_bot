@@ -1,5 +1,6 @@
 #Run the draft
-
+import json
+import pickle
 import numpy as np
 import pandas as pd
 import cvxpy as cp
@@ -66,6 +67,13 @@ def exclude_retired(players, names):
 
     return retired
 
+def create_teams(team_names):
+    teams = {
+
+    }
+    for team_name in team_names:
+        teams[team_name]
+
 ret_names = ['Brooks Orpik', 'Matt Hendricks', "Roberto Luongo", 'Chrus Butler', 'Matt Cullen',
              'Chris Kunitz', 'Wade Megan', 'Stephen Gionta', 'Mike McKenna', 'Cam Ward',
              'Ben Lovejoy', 'Niklas Kronwall', 'Dan Giardi', 'Eric Gryba', 'Lee Stempniak',
@@ -91,27 +99,44 @@ greedy_selections['left_winger'] = []
 order = [3,0,6,7,2,4,5,1]
 
 print(len(order), len(functions))
-team_names =["Fighting Squirrels", "Snorky Speak Man", "Sad Skaters",
-            "Burning Ice", "destructus", "frozen hope",
-            "Byron", "Big G"]
 
+team_names =["FIGHTING SQUIRRELS", "SNORKY SPEAK MAN", "SAD SKATERS",
+            "BURNING ICE", "DESTRUCTUS", "FROZEN HOPE",
+            "BYRON", "BIG G"]
 team_names = [x.upper() for x in team_names]
 print(team_names)
 args = dict(scores = all_points,
-            gammaa = [0.01, 0.01, 0.03, 0.8, 0, 0.89, None, None],
+            gammaa = [0.01, 0.01, 0.03, 0.8, 0, 0.89, 0.5, 0.6],
             greedy_selections = greedy_selections,
             df = player_data,
             defence = defence,
             center = center,
             left_wingers = left_wingers,
             right_wingers = right_wingers,
-            selection = ['max', 'optim', 'optim', 'max', 'max', 'optim', None, None],
-            sub_gamma = [None, 0.3, 0.8, None, None, .02, None, None])
+            selection = ['max', 'optim', 'optim', 'max', 'max', 'optim', 'max', 'optim'],
+            sub_gamma = [None, 0.3, 0.8, None, None, .02, None, 0.4])
 
 taken = exclude_retired(player_data, ret_names)
 print(taken)
-all_players, teams = hockey.draft(functions, order, pause= False, team_names = team_names, team_size=16, **args)
+fantasy_teams = {
+    "FIGHTING SQUIRRELS" : [],
+    "SNORKY SPEAK MAN" : [],
+    "SAD SKATERS" : [],
+    "BURNING ICE" : [],
+    "DESTRUCTUS" : [],
+    "FROZEN HOPE" : [],
+    "BYRON" : [],
+    "BIG G" : []}
+all_players, teams, fantasy_teams = hockey.draft(functions, order, pause= False, team_names = team_names, team_size=14, fantasy_teams = fantasy_teams,**args)
+#Save to fantasy_teams to json-file
+fantasy_json = json.dumps(fantasy_teams)
+jsonhandler = open("fantasy_teams_1.json", "w")
+jsonhandler.write(fantasy_json)
+jsonhandler.close()
+#Save with pickle
 
-
+picklehandler = open("fantasy_teams_pickle_1", "wb")
+pickle.dump(fantasy_teams, picklehandler)
+picklehandler.close()
 
 

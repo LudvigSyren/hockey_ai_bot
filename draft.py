@@ -100,7 +100,10 @@ greedy_selections['left_winger'] = []
 order = [3,0,6,7,2,4,5,1]
 
 print(len(order), len(functions))
-
+#My fantasy league
+alt_team_names =["HURDY GURDY MEN", "TIBBLE VIKINGS", "CSKA MELLANMJOLK",
+            "HJORTNAS HOOLIGANS", "INLAKE CHIPMUNKS", "HARRY BOIS",
+            "AKERO ISLANDERS", "LEKSAND"]
 team_names =["FIGHTING SQUIRRELS", "SNORKY SPEAK MAN", "SAD SKATERS",
             "BURNING ICE", "DESTRUCTUS", "FROZEN HOPE",
             "BYRON", "BIG G"]

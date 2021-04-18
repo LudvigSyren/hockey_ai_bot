@@ -73,7 +73,7 @@ def goalie_points(row,
     ass_points = row.assists * assist
     goals_in =  row.goalsAgainst
     goals_in = goals_in * goal_against
-    #    goals_in = round((row.saves * (1 - row.savePercentage/100))) * goal_against
+    goals_in = round((row.saves * (1 - row.savePercentage/100))) * goal_against
     
     
     

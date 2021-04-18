@@ -9,6 +9,7 @@ import hockey_bots as hockey
 #Import fixed player data from collect_data
 player_data = pd.read_csv("fixed_data_2018.csv")
 
+
 #Not sure about what next_year is used for yet but here it contains the same data as player_data
 next_year = pd.read_csv("fixed_data_2018.csv")
 # aggregate all scores into an array for each player

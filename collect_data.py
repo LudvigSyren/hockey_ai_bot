@@ -111,7 +111,7 @@ ax.set_xlabel("Player", size = 22)
 plt.show()
 
 #Save fixed player_data
-test2.to_csv("fixed_data_2018.csv")
+test2.to_csv("fixed_data_2018_2.csv")
 
 #Save fixed team data
 a.to_csv("textaa.csv")

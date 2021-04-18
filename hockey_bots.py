@@ -29,14 +29,14 @@ def player_merge(df_players, df_games, df_player_info):
     return df_
 
 def player_points(row, 
-           goal = 5, 
-           assit_divisor = 1.7,
-           pm = 0.66,
-           shot = 0.45, 
-           block = 0.24, 
-           face = 0.07,
-           penaltymult = -0.32,
-           short_hand = 0.59):
+           goal = 1, 
+           assit_divisor = 1,
+           pm = 1,
+           shot = 1, 
+           block = 1, 
+           face = 1,
+           penaltymult = 1,
+           short_hand = 1):
     '''
     This function implements a custom player point scoring scheme. 
     '''
@@ -58,10 +58,10 @@ def player_points(row,
 
 def goalie_points(row,
                   goal_shifts,
-                  save = 0.45,
-                  assist = 5/1.7,
-                  goal_against = -5,
-                  start_score = 8.66):
+                  save = 1,
+                  assist = 1,
+                  goal_against = 1,
+                  start_score = 1):
 
     '''
     This function is to implement the custom scoring system for goalies. Goal_shifts is a 
